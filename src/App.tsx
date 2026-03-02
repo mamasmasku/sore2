@@ -262,7 +262,7 @@ video tanpa musik tanpa teks'
 - Wajib ada variasi shot: wide shot → medium shot → close-up dalam satu segmen.
 - Visual harus spesifik berdasarkan hasil riset, bukan generik.
 - Karakter [KARAKTER] hanya boleh muncul dalam adegan visual MAKSIMAL 2 kali per segmen — baik sedang bicara, memegang produk, maupun aktivitas apapun.
-- Adegan tanpa karakter [KARAKTER] dalam segmen yang sama WAJIB fokus ke produk, tempat, atau detail visual tanpa menampilkan karakter sama sekali.
+- Adegan ke-3 dan seterusnya dalam segmen yang sama WAJIB fokus ke produk, tempat, atau detail visual tanpa menampilkan karakter sama sekali.
 
 ---
 
