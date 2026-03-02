@@ -22,7 +22,10 @@ const contentStyles = [
 export default function App() {
   const [prompts, setPrompts] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeStyle, setActiveStyle] = useState('ugc');
+
+  // ✅ FIX: activeStyles sekarang array (multi-select)
+  const [activeStyles, setActiveStyles] = useState<string[]>(['ugc']);
+
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [copiedSegmentKey, setCopiedSegmentKey] = useState<string | null>(null);
 
@@ -56,6 +59,24 @@ export default function App() {
     return () => clearInterval(interval);
   }, [isLoading]);
 
+  // ✅ FIX: Toggle style — minimal 1 harus selalu terpilih
+  const toggleStyle = (id: string) => {
+    setActiveStyles(prev =>
+      prev.includes(id)
+        ? prev.length === 1 ? prev : prev.filter(s => s !== id)
+        : [...prev, id]
+    );
+  };
+
+  // ✅ FIX: Distribusi gaya ke konten secara round-robin
+  const distributeStyles = (count: number, styles: string[]): string[] => {
+    const result: string[] = [];
+    for (let i = 0; i < count; i++) {
+      result.push(styles[i % styles.length]);
+    }
+    return result;
+  };
+
   const downloadPrompts = () => {
     const content = prompts.join('\n\n---\n\n');
     const blob = new Blob([content], { type: 'text/plain' });
@@ -75,7 +96,6 @@ export default function App() {
     setPrompts(updatedPrompts);
   };
 
-  // Salin semua segmen saja (tanpa header konten)
   const copyPrompt = (text: string, index: number) => {
     const promptStartIndex = text.indexOf('▶ SEGMEN');
     const promptToCopy = promptStartIndex !== -1 ? text.substring(promptStartIndex) : text;
@@ -84,7 +104,6 @@ export default function App() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  // Salin satu segmen saja — hanya teks prompt mulai dari ▶ SEGMEN
   const copySegment = (fullText: string, promptIndex: number, segmentIndex: number) => {
     const segments = fullText.split(/(?=▶ SEGMEN)/).filter(s => s.trim().startsWith('▶ SEGMEN'));
     const target = segments[segmentIndex];
@@ -96,7 +115,6 @@ export default function App() {
     }
   };
 
-  // Ekstrak segmen dari teks prompt
   const extractSegments = (text: string): string[] => {
     return text.split(/(?=▶ SEGMEN)/).filter(s => s.trim().startsWith('▶ SEGMEN'));
   };
@@ -126,7 +144,6 @@ Jelaskan bahwa [PRODUK/TEMPAT] ini cocok untuk [MANFAAT/USE-CASE HASIL RISET].
 
 Buat tampilan video yang hidup, menarik, real dan realistis seperti konten TikTok Go. Videonya berkualitas ultra HD 4K keren. Video tertata rapi dari opening, review rasa, penjelasan harga dan varian, sampai closing tanpa terpotong.
 
-
 video tanpa musik tanpa teks'
 
 **ATURAN HOOK (SANGAT PENTING):**
@@ -137,12 +154,10 @@ video tanpa musik tanpa teks'
 -   **Hook lanjutan HANYA untuk segmen 2, 3, dst. dalam konten yang SAMA.**
 
 **ATURAN CTA PENUTUP (WAJIB):**
-- HANYA ditambahkan di prompt SEGMEN TERAKHIR, tidak di segmen lainnya.
+- HANYA ditambahkan di prompt SEGMEN TERAKHIR dari setiap konten, tidak di segmen lainnya.
 - Jika hanya ada 1 segmen, segmen itu sekaligus menjadi segmen terakhir.
-- Inti pesan yang WAJIB tersampaikan: ajak penonton klik tag lokasi di bawah 
-  untuk dapat harga lebih hemat dan cek lokasi terdekat.
-- Kalimatnya BEBAS dikreasikan — boleh ubah susunan kata, tambahkan ekspresi 
-  natural, atau sesuaikan dengan tone konten. Yang penting inti pesannya sama.
+- Inti pesan yang WAJIB tersampaikan: ajak penonton klik tag lokasi di bawah untuk dapat harga lebih hemat dan cek lokasi terdekat.
+- Kalimatnya BEBAS dikreasikan — boleh ubah susunan kata, tambahkan ekspresi natural, atau sesuaikan dengan tone konten. Yang penting inti pesannya sama.
 - DILARANG menggunakan kalimat yang persis sama antar konten jika membuat lebih dari 1.
 
 **ATURAN FORMAT OUTPUT LAINNYA:**
@@ -152,14 +167,10 @@ video tanpa musik tanpa teks'
 -   JANGAN gunakan format list atau poin, seluruh output harus dalam format paragraf naratif yang menyatu sesuai template.
 
 **ATURAN PEMILIHAN HOOK (WAJIB):**
-- PILIH SECARA ACAK salah satu hook dari bank yang sesuai kategori — 
-  JANGAN selalu ambil yang pertama.
-- Setelah memilih, boleh MEMODIFIKASI KREATIF hook tersebut: 
-  ubah susunan kata, tambahkan ekspresi natural (contoh: "Eh wait—", "Guys,", 
-  "Oke jujur nih,"), atau gabungkan elemen dari dua hook berbeda.
+- PILIH SECARA ACAK salah satu hook dari bank yang sesuai kategori — JANGAN selalu ambil yang pertama.
+- Setelah memilih, boleh MEMODIFIKASI KREATIF hook tersebut: ubah susunan kata, tambahkan ekspresi natural (contoh: "Eh wait—", "Guys,", "Oke jujur nih,"), atau gabungkan elemen dari dua hook berbeda.
 - Inti pesan TIDAK BOLEH berubah (harga lebih murah lewat lokasi bawah).
-- Jika menghasilkan lebih dari 1 konten, WAJIB gunakan hook yang 
-  BERBEDA di setiap konten. Tidak boleh ada hook yang mirip antar konten.
+- Jika menghasilkan lebih dari 1 konten, WAJIB gunakan hook yang BERBEDA di setiap konten. Tidak boleh ada hook yang mirip antar konten.
 ---
 **BANK HOOK SEGMEN 1 (Pilih salah satu untuk segmen pertama sesuaikan dengan kategori):**
 ===========================
@@ -223,14 +234,7 @@ video tanpa musik tanpa teks'
 - "Tadi baru lihat bagian depan, sekarang kita keliling lebih jauh."
 ---`;
 
-    // ─────────────────────────────────────────────────────────────
-    // MODE RAPI — PERBAIKAN LENGKAP
-    // Fix 1: Diperkuat sebagai AI dengan kemampuan pencarian Google
-    // Fix 2: Ganti @batop40 → [KARAKTER] dari input user
-    // Fix 3: Format output WAJIB pakai ▶ SEGMEN [N] agar bisa di-parse
-    // Fix 4: Aturan pemisah -- antar segmen ditambahkan eksplisit
-    // ─────────────────────────────────────────────────────────────
-    const rapiModeInstruction = `Kamu adalah AI Scriptwriter dan Visual Director untuk konten review TikTok dalam Bahasa Indonesia, yang DIBEKALI KEMAMPUAN PENCARIAN GOOGLE. Tugas utamamu adalah MENCARI INFORMASI DULU tentang input user, lalu mengolahnya menjadi skrip video dialog yang lengkap, membuatkan visual adegen dari hasil pencarian apa yang perlu di informasikan seperti keunggulan, fasilitas, pelayanan, suasana yang menarik, natural, dan siap produksi.
+    const rapiModeInstruction = `Kamu adalah AI Scriptwriter dan Visual Director untuk konten review TikTok dalam Bahasa Indonesia, yang DIBEKALI KEMAMPUAN PENCARIAN GOOGLE. Tugas utamamu adalah MENCARI INFORMASI DULU tentang input user, lalu mengolahnya menjadi skrip video dialog yang lengkap, membuatkan visual adegan dari hasil pencarian apa yang perlu di informasikan seperti keunggulan, fasilitas, pelayanan, suasana yang menarik, natural, dan siap produksi.
 
 **PROSES BERPIKIR WAJIB — IKUTI URUTAN INI:**
 
@@ -249,7 +253,7 @@ video tanpa musik tanpa teks'
 **ATURAN DIALOG (WAJIB):**
 - **SEGMEN 1 — HOOK LOKASI:** Dialog pertama di Segmen 1 WAJIB berisi ajakan untuk klik tag lokasi di bawah karena harganya lebih murah dibanding beli/datang langsung. Pilih atau kreasikan dari Bank Hook sesuai kategori.
 - **SEGMEN 2 DST — HOOK LANJUTAN:** Gunakan frasa jembatan yang menyambung dari segmen sebelumnya agar tidak terasa terpotong.
-- **SEGMEN TERAKHIR — CTA PENUTUP:** Dialog terakhir WAJIB ditutup dengan ajakan klik tag lokasi di bawah untuk cek harga dan lokasi terdekat.
+- **SEGMEN TERAKHIR — CTA PENUTUP:** Dialog terakhir WAJIB ditutup dengan ajakan klik tag lokasi di bawah untuk cek harga dan lokasi terdekat. Kalimatnya bebas dikreasikan, tidak harus sama antar konten.
 - **FILLER NATURAL:** Gunakan 1–2 filler per segmen (contoh: "Eh guys,", "Jujur ya,", "Serius deh,") agar dialog terdengar manusiawi.
 - **DILARANG:** Jangan sebut harga spesifik apapun dalam dialog.
 
@@ -296,14 +300,13 @@ Tanpa teks, tanpa musik, tanpa watermark, Tone visual real-video realistis seper
   SALAH: "[Medium shot karakter berjalan masuk ke kafe],"
 
 **ATURAN PEMILIHAN HOOK (WAJIB):**
-- PILIH SECARA ACAK salah satu hook dari bank yang sesuai kategori — 
-  JANGAN selalu ambil yang pertama.
-- Setelah memilih, boleh MEMODIFIKASI KREATIF hook tersebut: 
-  ubah susunan kata, tambahkan ekspresi natural (contoh: "Eh wait—", "Guys,", 
-  "Oke jujur nih,"), atau gabungkan elemen dari dua hook berbeda.
+- PILIH SECARA ACAK salah satu hook dari bank yang sesuai kategori — JANGAN selalu ambil yang pertama.
+- Setelah memilih, boleh MEMODIFIKASI KREATIF hook tersebut: ubah susunan kata, tambahkan ekspresi natural (contoh: "Eh wait—", "Guys,", "Oke jujur nih,"), atau gabungkan elemen dari dua hook berbeda.
 - Inti pesan TIDAK BOLEH berubah (harga lebih murah lewat lokasi bawah).
-- Jika menghasilkan lebih dari 1 konten, WAJIB gunakan hook yang 
-  BERBEDA di setiap konten. Tidak boleh ada hook yang mirip antar konten.
+- Jika menghasilkan lebih dari 1 konten, WAJIB gunakan hook yang BERBEDA di setiap konten. Tidak boleh ada hook yang mirip antar konten.
+- **SETIAP KONTEN BARU (setelah *****) adalah video TERPISAH dan INDEPENDEN.**
+- **Segmen pertama dari SETIAP konten WAJIB menggunakan hook dari BANK HOOK SEGMEN 1 — bukan hook lanjutan.**
+- **Hook lanjutan HANYA untuk segmen 2, 3, dst. dalam konten yang SAMA.**
 ---
 
 **BANK HOOK SEGMEN 1 — MAKANAN/RESTO:**
@@ -357,6 +360,18 @@ Tanpa teks, tanpa musik, tanpa watermark, Tone visual real-video realistis seper
 
     const systemInstruction = promptMode === 'bebas' ? bebasModeInstruction : rapiModeInstruction;
 
+    // ✅ FIX: Hitung distribusi gaya ke setiap konten
+    const count = parseInt(contentCount) || 1;
+    const assignedStyles = distributeStyles(count, activeStyles);
+
+    const styleDistribution = assignedStyles
+      .map((s, i) => {
+        const title = contentStyles.find(cs => cs.id === s)?.title || s;
+        return `Konten ${i + 1}: ${title}`;
+      })
+      .join('\n');
+
+    // ✅ FIX: userPrompt sekarang pakai styleDistribution, bukan satu activeStyle
     const userPrompt = `
 Buatkan ${contentCount} konten video yang berbeda berdasarkan detail berikut:
 
@@ -365,67 +380,67 @@ Nama & Deskripsi Singkat: ${nameDesc}
 Karakter: ${character || 'faceless'}
 Durasi per Segmen: ${segmentDuration} detik
 Total Durasi: ${totalDuration} detik
-Gaya Konten: ${activeStyle}
+
+Distribusi Gaya Konten (WAJIB diikuti persis, setiap konten menggunakan gaya yang ditentukan):
+${styleDistribution}
 `;
 
-  try {
-    // ✅ Panggil API Route Vercel — bukan Gemini langsung dari browser
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userPrompt, systemInstruction }),
-    });
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userPrompt, systemInstruction }),
+      });
 
-    if (!response.ok) {
-      const errData = await response.json();
-      throw new Error(errData.error || 'Gagal menghubungi server');
-    }
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Gagal menghubungi server');
+      }
 
-    const data = await response.json();
-    const rawText: string = data.text;
+      const data = await response.json();
+      const rawText: string = data.text;
 
-// SESUDAH — lebih robust
-const responseText = rawText
-  .replace(/^\[([^\]]+)\],/gm, '$1,')
-  .replace(/^\[([^\]]+)\]$/gm, '$1');
+      // ✅ FIX: Parsing robust — split dari ***** original, bukan replace dulu
+      const responseText = rawText
+        .replace(/^\[([^\]]+)\],/gm, '$1,')
+        .replace(/^\[([^\]]+)\]$/gm, '$1');
 
-// Pisah konten berdasarkan ***** (dengan toleransi spasi/newline)
-const generatedPrompts = responseText
-  .split(/\s*\*{5}\s*/)
-  .map((p: string) => p.trim())
-  .filter((p: string) => p.includes('▶ SEGMEN'));
+      const generatedPrompts = responseText
+        .split(/\s*\*{5}\s*/)
+        .map((p: string) => p.trim())
+        .filter((p: string) => p.includes('▶ SEGMEN'));
 
-    const getStyleTitle = (id: string) =>
-      contentStyles.find((s) => s.id === id)?.title || id;
+      const getStyleTitle = (id: string) =>
+        contentStyles.find((s) => s.id === id)?.title || id;
 
-    const formattedPrompts = generatedPrompts.map((prompt: string, i: number) => {
-      const styleTitle = getStyleTitle(activeStyle);
-      const totalSegments = (prompt.match(/▶ SEGMEN/g) || []).length;
+      const formattedPrompts = generatedPrompts.map((prompt: string, i: number) => {
+        // ✅ FIX: Ambil style title dari assignedStyles[i], bukan activeStyle tunggal
+        const styleTitle = getStyleTitle(assignedStyles[i] || activeStyles[0]);
+        const totalSegments = (prompt.match(/▶ SEGMEN/g) || []).length;
 
-      return `═══════════════════════════════════════
+        return `═══════════════════════════════════════
 KONTEN #${i + 1} — ${styleTitle.toUpperCase()}
 ═══════════════════════════════════════
 Kategori: ${category}
 Durasi Target: ${totalDuration} detik (${totalSegments} segmen Sora)
 
 ${prompt}`;
-    });
+      });
 
-    setPrompts(formattedPrompts);
-  } catch (error: any) {
-    console.error('Error generating prompts:', error);
-    setPrompts([`Maaf, terjadi kesalahan: ${error.message}`]);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+      setPrompts(formattedPrompts);
+    } catch (error: any) {
+      console.error('Error generating prompts:', error);
+      setPrompts([`Maaf, terjadi kesalahan: ${error.message}`]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-zinc-200 font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-purple-500">MasterPrompt TikTok GO </h1>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-purple-500">MasterPrompt TikTok GO</h1>
           <p className="text-lg text-purple-300 mt-2">AI pembuat prompt video sinematik untuk konten TikTok GO.</p>
         </header>
 
@@ -460,7 +475,25 @@ ${prompt}`;
             </div>
 
             <div className="flex flex-col gap-4 p-6 bg-gray-800/50 border border-purple-700 rounded-xl">
-              <h2 className="text-2xl font-semibold text-yellow-400 border-b border-purple-700 pb-3">🎨 Gaya Konten</h2>
+              {/* ✅ FIX: Label menunjukkan multi-select + info distribusi */}
+              <div className="flex items-center justify-between border-b border-purple-700 pb-3">
+                <h2 className="text-2xl font-semibold text-yellow-400">🎨 Gaya Konten</h2>
+                <span className="text-xs text-purple-300 bg-purple-900/50 px-2 py-1 rounded-md">
+                  {activeStyles.length} dipilih · bisa lebih dari 1
+                </span>
+              </div>
+
+              {/* ✅ FIX: Preview distribusi gaya jika lebih dari 1 dipilih */}
+              {activeStyles.length > 1 && parseInt(contentCount) > 1 && (
+                <div className="text-xs text-zinc-400 bg-gray-900/50 border border-purple-800 rounded-lg p-3">
+                  <p className="text-purple-300 font-semibold mb-1">Distribusi ke {contentCount} konten:</p>
+                  {distributeStyles(parseInt(contentCount) || 1, activeStyles).map((s, i) => {
+                    const title = contentStyles.find(cs => cs.id === s)?.title || s;
+                    return <p key={i}>Konten {i + 1}: {title}</p>;
+                  })}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {contentStyles.map((style) => (
                   <StyleButton
@@ -468,8 +501,9 @@ ${prompt}`;
                     number={style.number}
                     title={style.title}
                     description={style.description}
-                    isActive={activeStyle === style.id}
-                    onClick={() => setActiveStyle(style.id)}
+                    // ✅ FIX: isActive dari array activeStyles
+                    isActive={activeStyles.includes(style.id)}
+                    onClick={() => toggleStyle(style.id)}
                   />
                 ))}
               </div>
@@ -521,7 +555,6 @@ ${prompt}`;
 
                 return (
                   <div key={index} className="flex flex-col gap-3">
-                    {/* Textarea + Salin Semua */}
                     <div className="relative group">
                       <Textarea
                         id={`prompt-${index}`}
@@ -537,7 +570,6 @@ ${prompt}`;
                       </button>
                     </div>
 
-                    {/* Tombol Salin per Segmen — hanya muncul jika ada segmen */}
                     {segments.length > 0 && (
                       <div className="flex flex-wrap gap-2 px-1">
                         {segments.map((_, segIdx) => {
