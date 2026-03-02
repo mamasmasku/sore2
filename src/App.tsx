@@ -412,7 +412,7 @@ ${prompt}`;
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-zinc-200 font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-purple-500">Sora Video Prompt Mamas</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-purple-500">MamasTikTokGo Prompt</h1>
           <p className="text-lg text-purple-300 mt-2">AI pembuat prompt video sinematik untuk konten affiliate review.</p>
         </header>
 
