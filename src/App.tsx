@@ -258,7 +258,7 @@ video tanpa musik tanpa teks'
 - **DILARANG:** Jangan sebut harga spesifik apapun dalam dialog.
 
 **ATURAN VISUAL (WAJIB):**
-- Setiap segmen terdiri dari 4–5 micro-scene (untuk 10 detik) atau 5–6 micro-scene (untuk 15 detik).
+- Setiap segmen terdiri dari 4–5 adegan micro-scene (untuk 10 detik) atau 6-7 adegan micro-scene (untuk 15 detik).
 - Wajib ada variasi shot: wide shot → medium shot → close-up dalam satu segmen.
 - Visual harus spesifik berdasarkan hasil riset, bukan generik.
 
@@ -279,15 +279,19 @@ Buatkan video realistic karakter [KARAKTER] sedang review [NAMA & DESKRIPSI HASI
 
 Tanpa teks, tanpa musik, tanpa watermark, Tone visual real-video realistis seperti konten TikTok, bukan animasi, Variasi sudut kamera wide → medium → close-up, Videonya berkualitas ultra HD 4K keren. Video tertata rapi dari opening, review rasa, penjelasan harga dan varian, sampai closing tanpa terpotong.
 
-[Deskripsi visual adegan 1 — spesifik dan sinematik], Dialog: "[kalimat dialog 1]"
+[Deskripsi visual adegan 1 — spesifik dan sinematik karakter on-screen, medium shot, berbicara langsung ke kamera], Dialog: "[kalimat dialog 1]"
 
-[Deskripsi visual adegan 2], Dialog: "[kalimat dialog 2]"
+[Deskripsi visual adegan 2 — visual murni, close-up produk/makanan/fasilitas, NO karakter], Dialog: "[kalimat dialog 2, voice over]"
 
-[Deskripsi visual adegan 3 — close-up produk/fasilitas unggulan hasil riset], Dialog: "[kalimat dialog 3]"
+[Deskripsi visual adegan 3 — visual murni close-up produk/fasilitas unggulan hasil riset], Dialog: "[kalimat dialog 3, voice over]"
 
-[Deskripsi visual adegan 4], Dialog: "[kalimat dialog 4]"
+[Deskripsi visual adegan 4 — karakter on-screen, close-up wajah atau gesture produk], Dialog: "[kalimat dialog 4]"
 
-[Deskripsi visual adegan 5 — jika durasi 15 detik], Dialog: "[kalimat dialog 5]"
+[Deskripsi visual adegan 5 — visual murni, angle berbeda dari adegan sebelumnya, NO karakter], Dialog: "[kalimat dialog 5, voice over]"
+
+[Deskripsi visual adegan 6 — visual murni, angle berbeda dari adegan sebelumnya, NO karakter], Dialog: "[kalimat dialog 6, voice over — hanya jika durasi 15 detik]"
+
+[Deskripsi visual adegan 7 — visual murni, closing shot produk/tempat, NO karakter], Dialog: "[kalimat dialog 7, voice over — hanya jika durasi 15 detik]"
 
 --
 
