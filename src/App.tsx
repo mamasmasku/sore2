@@ -116,7 +116,7 @@ export default function App() {
 **FORMAT PROMPT BARU (WAJIB DIIKUTI 100%):**
 'Buatkan video realistic karakter [KARAKTER] sedang review [NAMA & DESKRIPSI HASIL RISET YANG DETAIL].
 
-Hook "[PILIH/KREASIKAN HOOK DARI BANK HOOK]".
+Hook "[PILIH HOOK DARI BANK HOOK BOLEH DI KREASIKAN]".
 
 Setelah hook, kembangkan informasi produk secara menarik dan menggugah selera untuk dialog selama [DURASI SEGMEN] detik, MULTI SCENE, NO TEXT, CLEAR SUBJECT LOCK ,ANTI BLUR VIDEO , Tiap adegan visual sekitar 2–3 detik, Dialog langsung muncul di opening scene, tanpa intro shot.  tanpa jeda. Tampilkan [DETAIL VISUAL HASIL RISET, misal: close up produk, suasana tempat, dll].
 
@@ -133,6 +133,9 @@ video tanpa musik tanpa teks'
 **ATURAN HOOK (SANGAT PENTING):**
 -   **UNTUK SEGMEN 1:** Hook HARUS dipilih atau dikreasikan dari "BANK HOOK SEGMEN 1". Pesan utamanya adalah tentang mendapatkan harga lebih terjangkau melalui tag lokasi.
 -   **UNTUK SEGMEN 2 DST:** Hook HARUS dipilih atau dikreasikan dari "BANK HOOK LANJUTAN" yang sesuai dengan kategori.
+-   **SETIAP KONTEN BARU (setelah *****) adalah video TERPISAH dan INDEPENDEN.**
+-   **Segmen pertama dari SETIAP konten (termasuk konten ke-2, ke-3, dst.) WAJIB menggunakan hook dari BANK HOOK SEGMEN 1 — bukan hook lanjutan.**
+-   **Hook lanjutan HANYA untuk segmen 2, 3, dst. dalam konten yang SAMA.**
 
 **ATURAN FORMAT OUTPUT LAINNYA:**
 -   Awali setiap segmen dengan '▶ SEGMEN [N] ([X] detik)'.
@@ -372,15 +375,16 @@ Gaya Konten: ${activeStyle}
     const data = await response.json();
     const rawText: string = data.text;
 
-    const responseText = rawText
-      .replace(/\*\*\*\*\*/g, '---')
-      .replace(/^\[([^\]]+)\],/gm, '$1,')
-      .replace(/^\[([^\]]+)\]$/gm, '$1');
+// SESUDAH — lebih robust
+const responseText = rawText
+  .replace(/^\[([^\]]+)\],/gm, '$1,')
+  .replace(/^\[([^\]]+)\]$/gm, '$1');
 
-    const generatedPrompts = responseText
-      .split('---')
-      .map((p: string) => p.trim())
-      .filter((p: string) => p.includes('▶ SEGMEN'));
+// Pisah konten berdasarkan ***** (dengan toleransi spasi/newline)
+const generatedPrompts = responseText
+  .split(/\s*\*{5}\s*/)
+  .map((p: string) => p.trim())
+  .filter((p: string) => p.includes('▶ SEGMEN'));
 
     const getStyleTitle = (id: string) =>
       contentStyles.find((s) => s.id === id)?.title || id;
