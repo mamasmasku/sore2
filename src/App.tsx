@@ -126,7 +126,6 @@ Jelaskan bahwa [PRODUK/TEMPAT] ini cocok untuk [MANFAAT/USE-CASE HASIL RISET].
 
 Buat tampilan video yang hidup, menarik, real dan realistis seperti konten TikTok Go. Videonya berkualitas ultra HD 4K keren. Video tertata rapi dari opening, review rasa, penjelasan harga dan varian, sampai closing tanpa terpotong.
 
-[UNTUK SEGMEN TERAKHIR SAJA: Di akhir video ajak penonton untuk klik tag lokasi di bawah untuk mendapatkan harga lebih terjangkau dan cek lokasi terdekat.]
 
 video tanpa musik tanpa teks'
 
@@ -136,6 +135,15 @@ video tanpa musik tanpa teks'
 -   **SETIAP KONTEN BARU (setelah *****) adalah video TERPISAH dan INDEPENDEN.**
 -   **Segmen pertama dari SETIAP konten (termasuk konten ke-2, ke-3, dst.) WAJIB menggunakan hook dari BANK HOOK SEGMEN 1 — bukan hook lanjutan.**
 -   **Hook lanjutan HANYA untuk segmen 2, 3, dst. dalam konten yang SAMA.**
+
+**ATURAN CTA PENUTUP (WAJIB):**
+- HANYA ditambahkan di prompt SEGMEN TERAKHIR, tidak di segmen lainnya.
+- Jika hanya ada 1 segmen, segmen itu sekaligus menjadi segmen terakhir.
+- Inti pesan yang WAJIB tersampaikan: ajak penonton klik tag lokasi di bawah 
+  untuk dapat harga lebih hemat dan cek lokasi terdekat.
+- Kalimatnya BEBAS dikreasikan — boleh ubah susunan kata, tambahkan ekspresi 
+  natural, atau sesuaikan dengan tone konten. Yang penting inti pesannya sama.
+- DILARANG menggunakan kalimat yang persis sama antar konten jika membuat lebih dari 1.
 
 **ATURAN FORMAT OUTPUT LAINNYA:**
 -   Awali setiap segmen dengan '▶ SEGMEN [N] ([X] detik)'.
@@ -247,9 +255,10 @@ video tanpa musik tanpa teks'
 
 **ATURAN VISUAL (WAJIB):**
 - Setiap segmen terdiri dari 4–5 micro-scene (untuk 10 detik) atau 5–6 micro-scene (untuk 15 detik).
-- Karakter [KARAKTER] hanya boleh muncul BERBICARA maksimal 2 kali per segmen. Selebihnya fokus ke produk/tempat.
 - Wajib ada variasi shot: wide shot → medium shot → close-up dalam satu segmen.
 - Visual harus spesifik berdasarkan hasil riset, bukan generik.
+- Karakter [KARAKTER] hanya boleh muncul dalam adegan visual MAKSIMAL 2 kali per segmen — baik sedang bicara, memegang produk, maupun aktivitas apapun.
+- Adegan tanpa karakter [KARAKTER] dalam segmen yang sama WAJIB fokus ke produk, tempat, atau detail visual tanpa menampilkan karakter sama sekali.
 
 ---
 
