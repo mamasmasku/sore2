@@ -261,9 +261,13 @@ video tanpa musik tanpa teks'
 - Setiap segmen terdiri dari 4–5 micro-scene (untuk 10 detik) atau 5–6 micro-scene (untuk 15 detik).
 - Wajib ada variasi shot: wide shot → medium shot → close-up dalam satu segmen.
 - Visual harus spesifik berdasarkan hasil riset, bukan generik.
-- Karakter [KARAKTER] hanya boleh di sebut atau muncul MAKSIMAL 2 kali per segmen — baik sedang bicara, memegang produk, maupun aktivitas apapun.
-- Adegan ke-3 dan seterusnya dalam tiap segmen yang sama WAJIB fokus ke produk, tempat, atau detail visual tanpa menampilkan karakter [KARAKTER] sama sekali.
 
+**ATURAN KEMUNCULAN KARAKTER — INI ATURAN KERAS, TIDAK BOLEH DILANGGAR:**
+- Dalam 1 segmen, karakter [KARAKTER] HANYA BOLEH MUNCUL DI ADEGAN 1 DAN 2.
+- Adegan 3, 4, 5, dan seterusnya dalam segmen yang sama DILARANG KERAS menampilkan karakter dalam bentuk apapun tidak bicara, tidak memegang  produk, tidak gestur, tidak berjalan, tidak ada bagian tubuhnya sama sekali.
+- Adegan 3 ke atas HARUS 100% fokus pada: produk (close-up), suasana tempat, detail makanan/fasilitas/spot wisata, atau elemen visual lainnya TANPA karakter.
+- SEBELUM menulis adegan 3, cek ulang: apakah karakter muncul? Jika ya, hapus.
+- Pelanggaran aturan ini membuat seluruh prompt dianggap GAGAL.
 ---
 
 **FORMAT OUTPUT — IKUTI 100%, TIDAK BOLEH BERBEDA:**
